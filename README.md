@@ -1,5 +1,3 @@
-Project: Competency Project
-
 ## What this project is
 
 This repository holds a full-stack app that analyzes phone reviews from short videos. The system accepts a link from YouTube, TikTok, or Instagram, downloads the video, transcribes the audio, and runs sentiment analysis on the text. The goal is to evaluate phone aspects such as specs, battery, screen, camera and return an aspect-level sentiment summary.
