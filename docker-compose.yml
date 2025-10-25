@@ -33,5 +33,22 @@ services:
       DATABASE_PORT: ${DATABASE_PORT}
     env_file:
       - .env
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - VITE_BACKEND_URL=${VITE_BACKEND_URL}
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
+    env_file:
+      - .env
+
 volumes:
   postgres_data:
