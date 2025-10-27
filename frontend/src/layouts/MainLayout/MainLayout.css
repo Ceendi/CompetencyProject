@@ -1,0 +1,22 @@
+.main-layout-container {
+  background-color: #121417;
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.main-layout-content {
+  width: 92%;
+  margin: 0 auto;
+  margin-top: 2em;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 600px) {
+  .main-layout-content {
+    width: 100%;
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+}
