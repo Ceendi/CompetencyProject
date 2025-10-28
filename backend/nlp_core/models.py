@@ -1,10 +1,6 @@
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
-values = [
-    (-1, 'Negative'),
-    (0, 'Neutral'),
-    (1, 'Positive'),
-]
 
 class Film(models.Model):
     url = models.URLField(max_length=200)
@@ -14,18 +10,18 @@ class Film(models.Model):
 
 
 class Analysis(models.Model):
-    film = models.OneToOneField(Film,on_delete=models.CASCADE)
+    film = models.OneToOneField(Film, on_delete=models.CASCADE)
 
-    battery = models.IntegerField(choices=values, null=True, blank=True, default=None)
-    screen = models.IntegerField(choices=values, null=True, blank=True, default=None)
-    memory = models.IntegerField(choices=values, null=True, blank=True, default=None)
-    ram_memory = models.IntegerField(choices=values, null=True, blank=True, default=None)
-    camera = models.IntegerField(choices=values, null=True, blank=True, default=None)
-    performance = models.IntegerField(choices=values, null=True, blank=True, default=None)
-    design = models.IntegerField(choices=values, null=True, blank=True, default=None)
-    quick_charge = models.IntegerField(choices=values, null=True, blank=True, default=None)
-    audio = models.IntegerField(choices=values, null=True, blank=True, default=None)
-    price = models.IntegerField(choices=values, null=True, blank=True, default=None)
+    battery = models.FloatField(validators=[MinValueValidator(-1.0), MaxValueValidator(1.0)], null=True, blank=True, default=None)
+    screen = models.FloatField(validators=[MinValueValidator(-1.0), MaxValueValidator(1.0)], null=True, blank=True, default=None)
+    memory = models.FloatField(validators=[MinValueValidator(-1.0), MaxValueValidator(1.0)], null=True, blank=True, default=None)
+    ram_memory = models.FloatField(validators=[MinValueValidator(-1.0), MaxValueValidator(1.0)], null=True, blank=True, default=None)
+    camera = models.FloatField(validators=[MinValueValidator(-1.0), MaxValueValidator(1.0)], null=True, blank=True, default=None)
+    performance = models.FloatField(validators=[MinValueValidator(-1.0), MaxValueValidator(1.0)], null=True, blank=True, default=None)
+    design = models.FloatField(validators=[MinValueValidator(-1.0), MaxValueValidator(1.0)], null=True, blank=True, default=None)
+    quick_charge = models.FloatField(validators=[MinValueValidator(-1.0), MaxValueValidator(1.0)], null=True, blank=True, default=None)
+    audio = models.FloatField(validators=[MinValueValidator(-1.0), MaxValueValidator(1.0)], null=True, blank=True, default=None)
+    price = models.FloatField(validators=[MinValueValidator(-1.0), MaxValueValidator(1.0)], null=True, blank=True, default=None)
 
     def __str__(self):
         return (f"Analysis for {self.film.url} \n"
