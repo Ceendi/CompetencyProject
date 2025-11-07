@@ -9,6 +9,29 @@ Video-Sent is a full-stack application that analyzes user sentiment from video r
 - **Sentiment Analysis**: Aspect-based sentiment analysis of the transcribed text.
 - **Dashboard**: Visualizes the analysis results.
 
+## Architecture
+
+The application is built with a modern full-stack architecture, separating the backend API from the frontend client.
+
+### Backend
+
+The backend is a Python-based RESTful API built with the following key technologies:
+
+-   **FastAPI**: A modern, high-performance web framework for building APIs.
+-   **SQLAlchemy**: The SQL toolkit and Object-Relational Mapper (ORM) for database interaction.
+-   **Alembic**: A lightweight database migration tool for SQLAlchemy.
+-   **Pydantic**: Data validation and settings management using Python type annotations.
+-   **PostgreSQL**: The relational database for storing application data.
+
+### Frontend
+
+The frontend is a responsive single-page application (SPA) built with:
+
+-   **React**: A JavaScript library for building user interfaces.
+-   **Vite**: A next-generation frontend tooling that provides a faster and leaner development experience.
+-   **React Router**: For declarative routing within the application.
+-   **Framer Motion**: For creating fluid animations.
+
 ## Getting Started
 
 ### Prerequisites
@@ -51,7 +74,7 @@ Video-Sent is a full-stack application that analyzes user sentiment from video r
 
     # Install dependencies
 
-    uv pip sync
+    uv sync
 
     ```
 
