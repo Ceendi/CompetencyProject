@@ -7,7 +7,6 @@ dependencies = [
     "alembic>=1.17.1",
     "fastapi[standard]>=0.121.0",
     "openai>=1.0.0",
-    "pl-core-news-lg",
     "psycopg[binary]>=3.2.12",
     "pydantic-settings>=2.11.0",
     "spacy>=3.8.11",
@@ -16,7 +15,16 @@ dependencies = [
     "transformers>=4.57.1",
     "uvicorn>=0.38.0",
     "yt-dlp>=2024.7.25",
+    "pl-core-news-sm"
 ]
 
+[tool.uv]
+[[tool.uv.index]]
+name = "pytorch-cpu"
+url = "https://download.pytorch.org/whl/cpu"
+explicit = true
+
 [tool.uv.sources]
-pl-core-news-lg = { url = "https://github.com/explosion/spacy-models/releases/download/pl_core_news_lg-3.8.0/pl_core_news_lg-3.8.0-py3-none-any.whl" }
+torch = { index = "pytorch-cpu" }
+torchvision = { index = "pytorch-cpu" }
+pl-core-news-sm = { url = "https://github.com/explosion/spacy-models/releases/download/pl_core_news_sm-3.8.0/pl_core_news_sm-3.8.0-py3-none-any.whl" }

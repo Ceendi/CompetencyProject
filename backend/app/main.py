@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import status
 
 from app.api.router import api_router
 from app.nlp.engine import NlpEngine
@@ -49,3 +50,7 @@ app.include_router(api_router, prefix="/api")
 @app.get("/", tags=["Root"])
 async def read_root():
     return {"status": "ok", "message": "Welcome to Video-Sent API!"}
+
+@app.get("/health", status_code=status.HTTP_200_OK)
+async def health_check():
+    return {"status": "healthy"}
