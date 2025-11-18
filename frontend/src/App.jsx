@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout/MainLayout";
 import DashboardPage from "./pages/DashboardPage/DashboardPage";
 import ReviewsPage from "./pages/ReviewsPage/ReviewsPage";
+import { ReviewDetailPage } from "./pages/ReviewDetailPage/ReviewDetailPage";
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Route path="/" element={<MainLayout />}>
           <Route index element={<DashboardPage />} />
           <Route path="reviews" element={<ReviewsPage />} />
+          <Route path="reviews/:id" element={<ReviewDetailPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

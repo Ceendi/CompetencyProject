@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import "./DashboardPage.css";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import FloatingInput from "../../components/FloatingInput/FloatingInput";
@@ -18,6 +19,11 @@ export default function DashboardPage() {
   const progress = useMotionValue(0);
   const [videoUrl, setVideoUrl] = useState("");
   const abortControllerRef = useRef(null);
+  const navigate = useNavigate();
+
+  function handleViewSummary(videoId) {
+    navigate(`/reviews/${videoId}`);
+  }
 
   function handleCancelAnalyze() {
     // Don't allow cancel during completion phase
@@ -174,7 +180,11 @@ export default function DashboardPage() {
           <tbody>
             <AnimatePresence>
               {videos.map((video) => (
-                <TableRow key={video.id} video={video} />
+                <TableRow
+                  key={video.id}
+                  video={video}
+                  handleViewSummary={handleViewSummary}
+                />
               ))}
             </AnimatePresence>
           </tbody>

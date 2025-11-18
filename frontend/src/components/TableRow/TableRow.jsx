@@ -2,7 +2,7 @@ import { useIsPresent } from "framer-motion";
 import { motion } from "framer-motion";
 import "./TableRow.css";
 
-export default function TableRow({ video }) {
+export default function TableRow({ video, handleViewSummary }) {
   let isPresent = useIsPresent();
 
   return (
@@ -18,7 +18,12 @@ export default function TableRow({ video }) {
       <td className="dashboard-td dashboard-td-video">{video.videoTitle}</td>
       <td className="dashboard-td dashboard-td-platform">{video.platform}</td>
       <td className="dashboard-td dashboard-td-date">{video.date}</td>
-      <td className="dashboard-td dashboard-td-summary">View Summary</td>
+      <td
+        className="dashboard-td dashboard-td-summary"
+        onClick={() => handleViewSummary(video.id)}
+      >
+        View Summary
+      </td>
     </motion.tr>
   );
 }
