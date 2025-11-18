@@ -1,9 +1,11 @@
 import { useParams } from "react-router-dom";
-import videos from "../../data/videos.json";
 import "./ReviewDetailPage.css";
+import { useVideos } from "../../hooks/useVideos";
 
 export function ReviewDetailPage() {
   const { id } = useParams();
+  const { videos, setVideos } = useVideos();
+
   const video = videos.find((v) => v.id === id);
 
   if (!video) {
@@ -33,12 +35,12 @@ export function ReviewDetailPage() {
         </div>
       </div>
 
-      <div className="review-detail-summary">
+      {/* <div className="review-detail-summary">
         <h2 className="review-detail-summary-title">Analysis Summary</h2>
         <div className="review-detail-analysis">
           <p>{video.analysis}</p>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -7,11 +7,7 @@ import FloatingInput from "../../components/FloatingInput/FloatingInput";
 import JumpingDots from "../../components/JumpingDots/JumpingDots";
 import AnimatedTable from "../../components/AnimatedTable/AnimatedTable";
 import { useVideos } from "../../hooks/useVideos";
-import {
-  fetchVideo,
-  convertSpeechToText,
-  analyzeSentiment,
-} from "../../services/api";
+import { initiateAnalysis, getStatus, getResult } from "../../services/api";
 
 export default function DashboardPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -20,6 +16,7 @@ export default function DashboardPage() {
   const progress = useMotionValue(0);
   const [videoUrl, setVideoUrl] = useState("");
   const abortControllerRef = useRef(null);
+  const intervalRef = useRef(null);
   const navigate = useNavigate();
 
   function handleViewSummary(videoId) {
@@ -34,6 +31,11 @@ export default function DashboardPage() {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
+    }
+    // Clear the interval
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
     }
     setIsAnalyzing(false);
     progress.set(0);
@@ -53,44 +55,82 @@ export default function DashboardPage() {
     progress.set(0);
 
     try {
-      // Step 1: Fetch video (33%)
-      const fetchResult = await fetchVideo(signal);
-      if (signal.aborted) return; // Check if cancelled
-      console.log("Fetch video result:", fetchResult);
-      progress.set(33);
+      // Initiate analysis
+      const job = await initiateAnalysis(videoUrl);
+      if (signal.aborted) return;
+      console.log("Initiate analysis result:", job);
 
-      // Step 2: Convert speech to text (66%)
-      const speechResult = await convertSpeechToText(signal);
-      if (signal.aborted) return; // Check if cancelled
-      console.log("Speech to text result:", speechResult);
-      progress.set(66);
-
-      // Step 3: Analyze sentiment (100%)
-      const usedVideoIds = videos.map((v) => v.id);
-      const sentimentResult = await analyzeSentiment(signal, usedVideoIds);
-      if (signal.aborted) return; // Check if cancelled
-      console.log("Sentiment analysis result:", sentimentResult);
-      progress.set(100);
-
-      // Enter completion phase - can't cancel anymore
-      setIsCompleting(true);
-
-      // Reset after completion
-      setTimeout(() => {
+      if (job.error_message) {
+        alert(`Błąd: ${job.error_message}`);
         setIsAnalyzing(false);
-        setIsCompleting(false);
-        progress.set(0);
+        return;
+      }
 
-        setTimeout(() => {
-          if (sentimentResult.success && sentimentResult.video) {
-            setVideos((prevVideos) => {
-              const newVideos = [sentimentResult.video, ...prevVideos];
-              console.log("Updated videos array:", newVideos);
-              return newVideos;
-            });
+      intervalRef.current = setInterval(async () => {
+        try {
+          const statusResponse = await getStatus(job.id);
+          console.log("Status response:", statusResponse);
+
+          if (statusResponse.error_message) {
+            alert(`Błąd: ${statusResponse.error_message}`);
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+            setIsAnalyzing(false);
+            progress.set(0);
+            return;
           }
-        }, [400]);
-      }, 1750);
+
+          // Update progress based on status
+          switch (statusResponse.status) {
+            case "downloading":
+              progress.set(0);
+              break;
+            case "transcribing":
+              progress.set(33);
+              break;
+            case "analyzing":
+              progress.set(66);
+              break;
+            case "complete":
+              progress.set(100);
+              // Stop polling
+              clearInterval(intervalRef.current);
+              intervalRef.current = null;
+
+              // Enter completion phase
+              setIsCompleting(true);
+
+              // Get result
+              const result = await getResult(statusResponse.film_id);
+              console.log("Result:", result);
+
+              // Reset after completion
+              setTimeout(() => {
+                setIsAnalyzing(false);
+                setIsCompleting(false);
+                progress.set(0);
+
+                setTimeout(() => {
+                  setVideos((prevVideos) => {
+                    const newVideos = [result, ...prevVideos];
+                    console.log("Updated videos array:", newVideos);
+                    return newVideos;
+                  });
+                }, 400);
+              }, 1750);
+              break;
+            default:
+              break;
+          }
+        } catch (error) {
+          console.error("Error polling status:", error);
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+          setIsAnalyzing(false);
+          progress.set(0);
+          alert("Wystąpił błąd podczas sprawdzania statusu");
+        }
+      }, 2000);
     } catch (error) {
       // Check if error is due to abort
       if (error.name === "AbortError") {
@@ -102,6 +142,10 @@ export default function DashboardPage() {
       setIsAnalyzing(false);
       setIsCompleting(false);
       progress.set(0);
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
     } finally {
       abortControllerRef.current = null;
     }
