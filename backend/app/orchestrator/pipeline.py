@@ -34,7 +34,12 @@ async def run_full_pipeline(db: Session, job_id: int):
         logger.info(f"[Job {job_id}]: Starting transcription...")
 
         transcribed_text = await transcription_service.transcribe(audio_path=audio_path)
+
+        logger.info(f"[Job {job_id}]: Text: {transcribed_text}")
+
         logger.info(f"[Job {job_id}]: Transcription complete.")
+
+
 
         # === NLP ANALYSIS ===
         crud_job.update_status(db, job_id=job_id, status="analyzing")
