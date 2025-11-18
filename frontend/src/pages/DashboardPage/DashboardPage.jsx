@@ -1,11 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import "./DashboardPage.css";
 import ProgressBar from "../../components/ProgressBar/ProgressBar";
 import FloatingInput from "../../components/FloatingInput/FloatingInput";
 import JumpingDots from "../../components/JumpingDots/JumpingDots";
-import TableRow from "../../components/TableRow/TableRow";
+import AnimatedTable from "../../components/AnimatedTable/AnimatedTable";
+import { useVideos } from "../../hooks/useVideos";
 import {
   fetchVideo,
   convertSpeechToText,
@@ -15,7 +16,7 @@ import {
 export default function DashboardPage() {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
-  const [videos, setVideos] = useState([]);
+  const { videos, setVideos } = useVideos();
   const progress = useMotionValue(0);
   const [videoUrl, setVideoUrl] = useState("");
   const abortControllerRef = useRef(null);
@@ -83,10 +84,7 @@ export default function DashboardPage() {
         setTimeout(() => {
           if (sentimentResult.success && sentimentResult.video) {
             setVideos((prevVideos) => {
-              const newVideos = [sentimentResult.video, ...prevVideos].slice(
-                0,
-                3
-              );
+              const newVideos = [sentimentResult.video, ...prevVideos];
               console.log("Updated videos array:", newVideos);
               return newVideos;
             });
@@ -165,31 +163,11 @@ export default function DashboardPage() {
 
       <h2 className="dashboard-subtitle">Recent Analyses</h2>
 
-      <div className="dashboard-table-container">
-        <table className="dashboard-table">
-          <thead>
-            <tr className="dashboard-table-header">
-              <th className="dashboard-th dashboard-th-video">Video Title</th>
-              <th className="dashboard-th dashboard-th-platform">Platform</th>
-              <th className="dashboard-th dashboard-th-date">Date</th>
-              <th className="dashboard-th dashboard-th-summary">
-                Sentiment Summary
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <AnimatePresence>
-              {videos.map((video) => (
-                <TableRow
-                  key={video.id}
-                  video={video}
-                  handleViewSummary={handleViewSummary}
-                />
-              ))}
-            </AnimatePresence>
-          </tbody>
-        </table>
-      </div>
+      <AnimatedTable
+        videos={videos}
+        handleViewSummary={handleViewSummary}
+        maxItems={3}
+      />
     </div>
   );
 }
