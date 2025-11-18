@@ -1,12 +1,16 @@
 import asyncio
-import logging
-logger = logging.getLogger(__name__)
+from app.nlp.engine import NlpEngine
+from app.schemas.analysis import AnalysisBase
 
-async def analyze_sentiment(text: str) -> dict:
-    await asyncio.sleep(5)
-    logger.info("NLP analysis complete")
-    return {
-        "battery": 0.95,
-        "screen": -0.75,
-        "camera": 0.8
-    }
+
+class SentimentService:
+    def __init__(self, engine: NlpEngine):
+        self.engine = engine
+
+    async def analyze_sentiment(self, text: str) -> AnalysisBase:
+        if not text:
+            return AnalysisBase()
+
+        raw_data = await asyncio.to_thread(self.engine.analyze_text_sync, text)
+
+        return AnalysisBase(**raw_data)

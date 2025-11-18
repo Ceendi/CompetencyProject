@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 
 from app.downloader import service as downloader_service
 from app.transcription import service as transcription_service
-from app.nlp import service as nlp_service
+from app.nlp.service import SentimentService
+from app.nlp.dependencies import get_engine
 
 from app.crud import crud_job, crud_film, crud_analysis
 from app.schemas import AnalysisCreate
@@ -39,14 +40,18 @@ async def run_full_pipeline(db: Session, job_id: int):
         crud_job.update_status(db, job_id=job_id, status="analyzing")
         logger.info(f"[Job {job_id}]: Starting sentiment analysis...")
 
-        sentiment_results = await nlp_service.analyze_sentiment(text=transcribed_text)
+        engine = get_engine()
+        nlp_service_instance = SentimentService(engine=engine)
+
+        sentiment_results = await nlp_service_instance.analyze_sentiment(text=transcribed_text)
+        logger.info(f"Sentiment results: {sentiment_results}")
         logger.info(f"[Job {job_id}]: Sentiment analysis complete.")
 
         logger.info(f"[Job {job_id}]: Saving results to the database...")
 
         db_film = crud_film.create_film(db, url=job.url)
 
-        analysis_data = AnalysisCreate(**sentiment_results)
+        analysis_data = AnalysisCreate(**sentiment_results.model_dump())
 
         crud_analysis.create_analysis(db, analysis_data=analysis_data, film_id=db_film.id)
 

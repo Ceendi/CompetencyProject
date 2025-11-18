@@ -1,0 +1,37 @@
+# Docker ignore file
+
+# Git
+.git
+.gitignore
+
+# Python virtual environment
+.venv
+venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE / Editor specific
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Other
+.pytest_cache/
+.mypy_cache/
+htmlcov/
+*.log
+*.db
