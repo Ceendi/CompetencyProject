@@ -10,4 +10,9 @@ class Settings(BaseSettings):
 
     OPENAI_API_KEY: str | None = None
 
+    # NLP_SPACY_MODEL: str = "en_core_news_lg"
+    NLP_SPACY_MODEL: str = "pl_core_news_lg"
+
+    NLP_TRANSFORMER_MODEL: str = "nlptown/bert-base-multilingual-uncased-sentiment"
+
 settings = Settings()

@@ -2,12 +2,19 @@
 name = "backend"
 version = "0.1.0"
 description = "Add your description here"
-requires-python = ">=3.14"
+requires-python = ">=3.13"
 dependencies = [
     "alembic>=1.17.1",
     "fastapi[standard]>=0.121.0",
+    "pl-core-news-lg",
     "psycopg[binary]>=3.2.12",
     "pydantic-settings>=2.11.0",
+    "spacy>=3.8.11",
     "sqlalchemy>=2.0.44",
+    "torch>=2.9.1",
+    "transformers>=4.57.1",
     "uvicorn>=0.38.0",
 ]
+
+[tool.uv.sources]
+pl-core-news-lg = { url = "https://github.com/explosion/spacy-models/releases/download/pl_core_news_lg-3.8.0/pl_core_news_lg-3.8.0-py3-none-any.whl" }
