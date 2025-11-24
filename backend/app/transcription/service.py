@@ -2,10 +2,12 @@ import os
 import logging
 from openai import AsyncOpenAI
 
+from app.core.config import settings
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-aclient = AsyncOpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+aclient = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
 
 
 async def transcribe(audio_path: str) -> str:
