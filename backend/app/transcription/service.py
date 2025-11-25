@@ -13,7 +13,7 @@ aclient = AsyncOpenAI(api_key=settings.OPENAI_API_KEY)
 async def transcribe(audio_path: str) -> str:
     if not os.path.exists(audio_path):
         logger.error(f"File not found: {audio_path}")
-        return "Error: File not found"
+        raise FileNotFoundError(f"File not found: {audio_path}")
 
     try:
         logger.info(f"Starting OpenAI transcription for: {audio_path}")
@@ -30,4 +30,4 @@ async def transcribe(audio_path: str) -> str:
 
     except Exception as e:
         logger.error(f"OpenAI Error: {e}")
-        return f"BŁĄD OpenAI: {e}"
+        raise e

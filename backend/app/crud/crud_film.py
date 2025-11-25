@@ -7,11 +7,23 @@ def get_film(db: Session, film_id: int) -> Film | None:
 def get_film_by_url(db: Session, url: str) -> Film | None:
     return db.query(Film).filter(Film.url == url).first()
 
-def create_film(db: Session, url: str) -> Film:
+def create_film(
+    db: Session, 
+    url: str, 
+    title: str = None, 
+    platform: str = None, 
+    transcribed_text: str = None
+) -> Film:
     db_film = get_film_by_url(db, url)
     if db_film:
         return db_film
-    db_film = Film(url=url)
+    
+    db_film = Film(
+        url=url,
+        title=title,
+        platform=platform,
+        transcribed_text=transcribed_text
+    )
     db.add(db_film)
     db.commit()
     db.refresh(db_film)

@@ -37,10 +37,17 @@ def _pobierz_audio_sync(url: str) -> Optional[str]:
 
             base_filename = ydl.prepare_filename(info)
             final_path = os.path.splitext(base_filename)[0] + f'.{AUDIO_FORMAT}'
+            
+            title = info.get('title', 'Unknown Title')
+            platform = info.get('extractor', 'Unknown Platform')
 
             if os.path.exists(final_path):
                 logger.info(f"Pomyślnie pobrano audio do: {final_path}")
-                return final_path
+                return {
+                    "path": final_path,
+                    "title": title,
+                    "platform": platform
+                }
             else:
                 logger.error(f"Plik nie został znaleziony po pobraniu: {final_path}")
                 return None
@@ -50,10 +57,6 @@ def _pobierz_audio_sync(url: str) -> Optional[str]:
         return None
 
 
-async def download_audio(url: str) -> str:
-    audio_path = await asyncio.to_thread(_pobierz_audio_sync, url)
-
-    if audio_path:
-        return audio_path
-    else:
-        return "/tmp/download_error.mp3"
+async def download_audio(url: str) -> Optional[dict]:
+    result = await asyncio.to_thread(_pobierz_audio_sync, url)
+    return result

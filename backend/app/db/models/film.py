@@ -9,6 +9,9 @@ class Film(Base):
     id = Column(Integer, primary_key=True, index=True)
 
     url = Column(String(200), unique=True, index=True, nullable=False)
+    title = Column(String, nullable=True)
+    platform = Column(String, nullable=True)
+    transcribed_text = Column(String, nullable=True)
 
     analysis = relationship(
         "Analysis",

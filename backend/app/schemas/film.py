@@ -13,6 +13,9 @@ class FilmCreate(FilmBase):
 
 class Film(FilmBase):
     id: int
+    title: str | None = None
+    platform: str | None = None
+    transcribed_text: str | None = None
 
     analysis: Analysis | None = None
 

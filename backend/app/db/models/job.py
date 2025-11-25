@@ -20,7 +20,7 @@ class Job(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now())
 
-    film_id = Column(Integer, ForeignKey("films.id"), nullable=True, unique=True)
+    film_id = Column(Integer, ForeignKey("films.id"), nullable=True, unique=False)
 
     film = relationship("Film")
 
