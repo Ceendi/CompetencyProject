@@ -14,7 +14,7 @@ class AspectCatalog:
         AspectDefinition("camera", ["aparat", "zdjęcia", "kamera", "wideo", "zoom", "selfie", "camera", "photo", "video"]),
         AspectDefinition("performance", ["wydajność", "procesor", "zacinanie", "płynność", "gry", "cpu", "performance", "lag"]),
         AspectDefinition("design", ["wygląd", "obudowa", "kolor", "wykonanie", "design", "body", "build"]),
-        AspectDefinition("quick_charge", ["szybkie ładowanie", "fast charging", "watów", "w", "ładowarka"]),
+        AspectDefinition("quick_charge", ["szybkie ładowanie", "fast charging", "watów", "ładowarka"]),
         AspectDefinition("audio", ["głośniki", "dźwięk", "muzyka", "audio", "sound", "speakers"]),
         AspectDefinition("price", ["cena", "koszt", "opłacalność", "drogi", "tani", "price", "cost", "value"])
     ]
