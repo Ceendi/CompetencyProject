@@ -105,3 +105,152 @@
     padding: 20px;
   }
 }
+
+.review-detail-meta {
+  display: flex;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  color: #666;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  color: #f0f0f0;
+  border-bottom: 2px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-title.center-text {
+  text-align: center;
+  border-bottom: none;
+  margin-bottom: 1rem;
+}
+
+.review-hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+  background: transparent;
+  border: none;
+  padding: 0;
+  width: 100%; 
+}
+
+.hero-divider {
+  width: 100%;       
+  border: 0;
+  height: 1px;       
+  background: #e0e0e0; 
+  margin: 0 0 2rem 0; 
+}
+
+.hero-gauge-wrapper {
+  width: 320px;
+}
+
+.review-gauges-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.5rem;
+  justify-items: center;
+  margin-bottom: 3rem;
+}
+
+@media (max-width: 1200px) {
+  .review-gauges-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+@media (max-width: 700px) {
+  .review-gauges-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.gauge-item {
+  padding: 0.8rem;
+  width: 100%;
+  height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.03);
+  transition: transform 0.2s;
+}
+
+.gauge-item-large {
+  height: 280px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+.gauge-item-large .gauge-title {
+  font-size: 1.4rem;
+  margin-bottom: 15px;
+  color: #f0f0f0;
+}
+
+.gauge-item-large .gauge-chart-wrapper {
+  max-width: 280px;
+  height: 140px;
+}
+
+.gauge-item-large .gauge-value-text {
+  font-size: 3rem;
+  margin-top: -15px;
+}
+
+.gauge-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.gauge-chart-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 220px; 
+  height: 110px; 
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.gauge-value-text {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #f0f0f0;
+  margin-top: -10px;
+  z-index: 1;
+}
+
+.gauge-no-data-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+
+.transcription-box {
+  padding: 2rem;
+  font-family: 'Georgia', serif; 
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #f0f0f0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  white-space: pre-wrap; 
+  max-height: 600px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #aaa transparent;
+}
