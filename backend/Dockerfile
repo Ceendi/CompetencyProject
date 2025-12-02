@@ -16,7 +16,7 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 COPY scripts/download_models.py .
 
 ENV HF_HOME="/app/hf_cache"
-ARG TRANSFORMER_MODEL="bert-base-uncased"
+ARG TRANSFORMER_MODEL="nlptown/bert-base-multilingual-uncased-sentiment"
 
 RUN python download_models.py --model_name "${TRANSFORMER_MODEL}"
 

@@ -42,6 +42,8 @@ The frontend is a responsive single-page application (SPA) built with:
 
 - Python 3.13+ and uv (for local backend development)
 
+- ffmpeg (required for audio processing)
+
 ### Running with Docker (Recommended)
 
 1.  **Create Environment File**:
@@ -76,14 +78,11 @@ The frontend is a responsive single-page application (SPA) built with:
     ```
 
 2.  **Download NLP Models**:
-    These models are required for sentiment analysis.
+    The SpaCy model is installed automatically via `uv sync`. You only need to download the Transformer model.
 
     ```bash
     # Navigate to the backend directory
     cd backend
-
-    # Download SpaCy model
-    python scripts/download_models.py --model_name pl_core_news_sm
 
     # Download Transformers model
     python scripts/download_models.py --model_name nlptown/bert-base-multilingual-uncased-sentiment
