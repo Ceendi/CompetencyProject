@@ -1,0 +1,123 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{hyperref}
+\usepackage{listings}
+
+\geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=25mm,
+ top=25mm,
+}
+
+\title{\textbf{Dokumentacja Projektu Video-Sent}}
+\author{Zespół Projektowy}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Wstęp}
+W dokumencie przedstawiono budowę aplikacji Video-Sent. Projekt ten służy do analizy recenzji wideo pochodzących z serwisów takich jak YouTube. System składa się z dwóch głównych elementów: aplikacji klienckiej (\textbf{Frontend}) oraz serwera przetwarzającego dane (\textbf{Backend}). W dalszej części opisano wykorzystane technologie oraz zasadę działania systemu.
+
+\section{Ogólny opis systemu}
+Aplikacja funkcjonuje w modelu klient-serwer. Frontend komunikuje się z Backendem za pośrednictwem API. Część serwerowa została zaimplementowana w języku Python, co pozwoliło na wykorzystanie dostępnych bibliotek do przetwarzania danych. Zastosowano przetwarzanie asynchroniczne, dzięki czemu użytkownik nie oczekuje na zakończenie analizy w czasie rzeczywistym – proces ten realizowany jest w tle.
+
+\subsection{Użyte technologie}
+\begin{itemize}
+    \item \textbf{Frontend:} Biblioteka React 19 (Vite), wizualizacja danych przy użyciu Chart.js.
+    \item \textbf{Backend:} Język Python 3.13 oraz framework FastAPI.
+    \item \textbf{Baza Danych:} System zarządzania bazą danych PostgreSQL.
+    \item \textbf{Analiza i AI:} 
+    \begin{itemize}
+        \item spaCy - narzędzie do analizy tekstu.
+        \item OpenAI API - usługa transkrypcji mowy na tekst.
+    \end{itemize}
+    \item \textbf{Inne:} yt-dlp (pobieranie ścieżek audio), Pytest (testy jednostkowe).
+\end{itemize}
+
+\section{Szczegóły implementacji}
+
+\subsection{Frontend (Aplikacja webowa)}
+Warstwa prezentacji została zrealizowana jako SPA (Single Page Application) w technologii React. Główne elementy to:
+\begin{itemize}
+    \item \textbf{Dashboard:} Widok prezentujący listę wykonanych analiz.
+    \item \textbf{Widok szczegółów:} Ekran przedstawiający szczegółowe wyniki dla wybranego materiału wideo.
+    \item \textbf{Warstwa komunikacji:} Moduły odpowiedzialne za wysyłanie żądań HTTP do serwera.
+\end{itemize}
+
+\subsection{Backend API}
+Serwer udostępnia interfejs programistyczny (API) wykorzystywany przez frontend. Kluczowe punkty końcowe (endpoints) to:
+\begin{itemize}
+    \item \texttt{POST /api/analysis/}: Przyjmuje adres URL filmu. System weryfikuje obecność filmu w bazie. W przypadku braku, tworzone jest nowe zadanie (\texttt{Job}) i inicjowany jest proces przetwarzania w tle.
+    \item \texttt{GET /api/status/\{job\_id\}}: Umożliwia monitorowanie postępu analizy.
+    \item \texttt{GET /api/result/\{film\_id\}}: Służy do pobrania finalnych wyników analizy.
+\end{itemize}
+
+\subsection{Główna logika (Pipeline)}
+Procesem przetwarzania steruje moduł orkiestracji (plik \texttt{pipeline.py}). Realizuje on następujące etapy:
+1.  \textbf{Pobieranie:} Narzędzie \texttt{yt-dlp} pobiera ścieżkę audio ze wskazanego adresu URL.
+2.  \textbf{Transkrypcja:} Plik audio przekazywany jest do API OpenAI w celu uzyskania transkrypcji tekstowej.
+3.  \textbf{Analiza:} Moduł NLP przetwarza tekst, identyfikując cechy produktu (np. bateria, ekran) oraz określając sentyment wypowiedzi.
+4.  \textbf{Zapis:} Wyniki są zapisywane w bazie danych, a status zadania ulega aktualizacji.
+
+\subsection{Baza Danych}
+W projekcie wykorzystano system PostgreSQL oraz bibliotekę SQLAlchemy, co pozwala na mapowanie obiektowe relacyjnej bazy danych (ORM).
+
+\section{Struktura danych}
+Model danych opiera się na trzech głównych tabelach:
+\begin{itemize}
+    \item \textbf{Jobs:} Przechowuje informacje o zadaniach, w tym ich aktualny status (np. w toku, zakończone, błąd).
+    \item \textbf{Films:} Zawiera metadane filmu (tytuł, platforma) oraz pełną transkrypcję.
+    \item \textbf{Analysis:} Gromadzi wyniki liczbowe analizy, takie jak oceny poszczególnych aspektów.
+\end{itemize}
+
+\section{Diagramy}
+Poniżej przedstawiono schematy obrazujące strukturę i działanie systemu.
+
+\subsection{Architektura Backendu}
+Diagram prezentuje strukturę modułową backendu, uwzględniając router API, logikę sterującą oraz poszczególne serwisy (pobieranie, transkrypcja, NLP).
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{architecture_diagram.png}
+    \caption{Moduły Backendu}
+    \label{fig:components}
+\end{figure}
+
+\subsection{Schemat Bazy Danych (ERM)}
+Schemat obrazuje relacje między tabelami w bazie danych. Tabela \texttt{Jobs} powiązana jest z \texttt{Films}, a wyniki analizy przechowywane są w tabeli \texttt{Analysis}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{erm_diagram.png}
+    \caption{Struktura bazy danych}
+    \label{fig:erm}
+\end{figure}
+
+\subsection{Przebieg analizy (Sequence Diagram)}
+Diagram sekwencji ilustruje przepływ sterowania podczas procesu analizy wideo, wskazując na interakcje między komponentami systemu.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{sequence_diagram.png}
+    \caption{Przebieg procesu analizy}
+    \label{fig:sequence}
+\end{figure}
+
+\section{Testowanie}
+W celu weryfikacji poprawności działania systemu przygotowano testy:
+\begin{itemize}
+    \item \textbf{Backend:} Testy funkcjonalne realizowane przy użyciu frameworka \texttt{pytest}.
+    \item \textbf{Wydajność:} Testy obciążeniowe przeprowadzane za pomocą narzędzia \texttt{locust}.
+\end{itemize}
+
+\end{document}

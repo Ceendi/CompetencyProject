@@ -1,0 +1,141 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[polish]{babel}
+\usepackage{geometry}
+\usepackage{longtable}
+\usepackage{graphicx}
+\usepackage{float}
+
+\geometry{
+ a4paper,
+ total={170mm,257mm},
+ left=25mm,
+ top=25mm,
+}
+
+\title{\textbf{Raport końcowy z testów dla modułu Video-Sent API}}
+\author{Kacper Przybylski, Kacper Witek, Kacper Stasiak,\\Julia Ruszer, Dawid Frontczak, Jakub Cendalski}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Wstęp}
+Niniejszy dokument przedstawia raport końcowy z testów dla modułu backendowego Video-Sent API, będącego częścią systemu analizy sentymentu wideo. Dokument jest wynikiem prac przeprowadzonych w ramach etapu weryfikacji jakości oprogramowania.
+W kolejnych rozdziałach opisano wyniki prac związanych z realizacją zadań testowych oraz wnioski wynikające z ich przeprowadzenia.
+
+\section{Podsumowanie procedury testowej}
+W procesie testowym, zgodnie z Planem Testów, zostały przeprowadzone testy modułowe (jednostkowe), testy integracyjne API, testy wydajnościowe oraz testy bezpieczeństwa. Przetestowane zostały następujące elementy:
+\begin{itemize}
+    	\item Endpointy API (inicjowanie, status, wynik).
+    	\item Serwisy backendowe (Downloader, Transcription, NLP).
+    	\item Mechanizmy bazy danych (CRUD).
+\end{itemize}
+Testy zostały w całości zautomatyzowane przy użyciu frameworka \texttt{pytest} oraz narzędzi \texttt{locust} i \texttt{bandit}.
+
+W ramach procedury testowej nie wykryto krytycznych defektów blokujących wydanie. Wykryte ryzyka (np. wydajność zewnętrznych API) zostały zmitigowane poprzez zastosowanie mechanizmów asynchronicznych.
+
+\section{Odchylenia od planu testów}
+Brak znaczących odchyleń. Testy wydajnościowe przeprowadzono na zamockowanych usługach zewnętrznych w celu uniknięcia kosztów operacyjnych, co było zgodne z ustaleniami.
+
+\section{Ocena kompletności testów}
+\begin{itemize}
+    	\item Liczba pokrytych przypadków użycia: 100\%
+    	\item Całkowita liczba zaimplementowanych testów automatycznych: 17
+    	\item Całkowita liczba wykonanych testów: 17
+    	\item Liczba testów zakończonych sukcesem: 17
+    	\item Liczba testów zakończonych porażką: 0
+\end{itemize}
+
+\section{Raport z aktualnego stanu testów}
+
+\subsection{Testy integracyjne API}
+\begin{longtable}{|p{5.5cm}|p{7.5cm}|p{2cm}|}
+\hline
+\textbf{Nazwa testu} & \textbf{Opis testu} & \textbf{Status} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Nazwa testu} & \textbf{Opis testu} & \textbf{Status} \\
+\hline
+\endhead
+
+test\_initiate\_analysis & Weryfikacja poprawnego utworzenia zadania analizy dla nowego URL. & Zaliczony \\
+\hline
+test\_initiate\_analysis\_duplicate & Sprawdzenie obsługi duplikatów (zwrócenie istniejącego wyniku). & Zaliczony \\
+\hline
+test\_initiate\_analysis\_conflict & Sprawdzenie obsługi konfliktów (podpięcie pod trwające zadanie). & Zaliczony \\
+\hline
+test\_get\_status & Weryfikacja pobierania statusu zadania. & Zaliczony \\
+\hline
+test\_get\_status\_not\_found & Obsługa błędu 404 dla nieistniejącego zadania. & Zaliczony \\
+\hline
+test\_get\_result & Weryfikacja pobierania kompletnych wyników analizy. & Zaliczony \\
+\hline
+test\_get\_result\_not\_found & Obsługa błędu 404 dla nieistniejącego wyniku. & Zaliczony \\
+\hline
+\end{longtable}
+
+\subsection{Testy jednostkowe (Unit Tests)}
+\begin{longtable}{|p{5.5cm}|p{7.5cm}|p{2cm}|}
+\hline
+\textbf{Nazwa testu} & \textbf{Opis testu} & \textbf{Status} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Nazwa testu} & \textbf{Opis testu} & \textbf{Status} \\
+\hline
+\endhead
+
+test\_download\_audio\_success & Symulacja poprawnego pobrania pliku przez serwis Downloader. & Zaliczony \\
+\hline
+test\_download\_audio\_failure & Weryfikacja obsługi błędów biblioteki yt-dlp. & Zaliczony \\
+\hline
+test\_transcribe\_success & Symulacja poprawnej transkrypcji przez serwis OpenAI. & Zaliczony \\
+\hline
+test\_transcribe\_file\_not\_found & Walidacja istnienia pliku przed wysłaniem do API. & Zaliczony \\
+\hline
+test\_transcribe\_api\_error & Walidacja poprawności serwisu OpenAI. & Zaliczony \\
+\hline
+test\_analyze\_text\_logic & Weryfikacja logiki mapowania sentymentu na aspekty (NLP). & Zaliczony \\
+\hline
+test\_analyze\_text\_averaging & Weryfikacja uśredniania sentymentu dla wielokrotnych wzmianek o aspekcie (NLP). & Zaliczony \\
+\hline
+\end{longtable}
+
+\subsection{Testy integracyjne NLP}
+\begin{longtable}{|p{6cm}|p{7cm}|p{2cm}|}
+\hline
+\textbf{Nazwa testu} & \textbf{Opis testu} & \textbf{Status} \\
+\hline
+\endfirsthead
+\hline
+\textbf{Nazwa testu} & \textbf{Opis testu} & \textbf{Status} \\
+\hline
+\endhead
+test\_nlp\_analysis\_iphone\_review & Weryfikacja analizy sentymentu dla przykładowej recenzji (iPhone). & Zaliczony \\
+\hline
+test\_nlp\_analysis\_negative\_review & Weryfikacja analizy sentymentu dla ogólnie negatywnego tekstu. & Zaliczony \\
+\hline
+test\_nlp\_analysis\_positive\_review & Weryfikacja analizy sentymentu dla ogólnie pozytywnego tekstu. & Zaliczony \\
+\hline
+\end{longtable}
+\newpage
+\subsection{Testy Niefunkcjonalne}
+\begin{longtable}{|p{4cm}|p{9cm}|p{2cm}|}
+\hline
+\textbf{Rodzaj testu} & \textbf{Opis i Wynik} & \textbf{Status} \\
+\hline
+Test Bezpieczeństwa (Bandit) & Skanowanie statyczne kodu (SAST). Wynik: Brak zagrożeń (Severity: High/Medium). Naprawiono problem ze ścieżką /tmp. & Zaliczony \\
+\hline
+Test Wydajności (Locust) & Symulacja obciążenia 100 użytkowników. Średni czas odpowiedzi dla /api/analysis < 15ms. Obsługa błędów zewnętrznych API nie wpływa na stabilność serwera. & Zaliczony \\
+\hline
+\end{longtable}
+
+\section{Wnioski}
+Zrealizowano wszystkie zaplanowane zadania testowe dla modułu Video-Sent API. System wykazuje stabilność, poprawnie obsługuje błędy oraz scenariusze współbieżnego dostępu (duplikaty, konflikty). Kod jest zabezpieczony przed podstawowymi podatnościami, a wydajność samej aplikacji (narzut frameworka) jest na zadowalającym poziomie.
+Rekomenduje się przejście do kolejnej fazy wdrożenia.
+
+\end{document}
