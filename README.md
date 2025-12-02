@@ -17,20 +17,20 @@ The application is built with a modern full-stack architecture, separating the b
 
 The backend is a Python-based RESTful API built with the following key technologies:
 
--   **FastAPI**: A modern, high-performance web framework for building APIs.
--   **SQLAlchemy**: The SQL toolkit and Object-Relational Mapper (ORM) for database interaction.
--   **Alembic**: A lightweight database migration tool for SQLAlchemy.
--   **Pydantic**: Data validation and settings management using Python type annotations.
--   **PostgreSQL**: The relational database for storing application data.
+- **FastAPI**: A modern, high-performance web framework for building APIs.
+- **SQLAlchemy**: The SQL toolkit and Object-Relational Mapper (ORM) for database interaction.
+- **Alembic**: A lightweight database migration tool for SQLAlchemy.
+- **Pydantic**: Data validation and settings management using Python type annotations.
+- **PostgreSQL**: The relational database for storing application data.
 
 ### Frontend
 
 The frontend is a responsive single-page application (SPA) built with:
 
--   **React**: A JavaScript library for building user interfaces.
--   **Vite**: A next-generation frontend tooling that provides a faster and leaner development experience.
--   **React Router**: For declarative routing within the application.
--   **Framer Motion**: For creating fluid animations.
+- **React**: A JavaScript library for building user interfaces.
+- **Vite**: A next-generation frontend tooling that provides a faster and leaner development experience.
+- **React Router**: For declarative routing within the application.
+- **Framer Motion**: For creating fluid animations.
 
 ## Getting Started
 
@@ -40,7 +40,7 @@ The frontend is a responsive single-page application (SPA) built with:
 
 - Node.js and npm (for local frontend development)
 
-- Python 3.14+ and uv (for local backend development)
+- Python 3.13+ and uv (for local backend development)
 
 ### Running with Docker (Recommended)
 
@@ -70,15 +70,26 @@ The frontend is a responsive single-page application (SPA) built with:
 
     cd backend
 
-
-
     # Install dependencies
-
     uv sync
 
     ```
 
-2.  **Run Migrations**:
+2.  **Download NLP Models**:
+    These models are required for sentiment analysis.
+
+    ```bash
+    # Navigate to the backend directory
+    cd backend
+
+    # Download SpaCy model
+    python scripts/download_models.py --model_name pl_core_news_sm
+
+    # Download Transformers model
+    python scripts/download_models.py --model_name nlptown/bert-base-multilingual-uncased-sentiment
+    ```
+
+3.  **Run Migrations**:
 
     ```bash
 
@@ -86,7 +97,7 @@ The frontend is a responsive single-page application (SPA) built with:
 
     ```
 
-3.  **Start the Server**:
+4.  **Start the Server**:
 
     ```bash
 
@@ -131,6 +142,7 @@ The frontend is a responsive single-page application (SPA) built with:
 The backend API is available at `/api`. The main endpoints are:
 
 - `POST /api/analysis/`: Initiate a new analysis for a video.
-- `GET /api/analysis/{analysis_id}`: Get the status and results of an analysis.
+- `GET /api/status/{job_id}`: Get the status of an analysis job.
+- `GET /api/result/{film_id}`: Get the final results of the analysis.
 
 For more details, see the OpenAPI documentation at `http://localhost:8000/docs` when the backend is running.
