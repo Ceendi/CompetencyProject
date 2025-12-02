@@ -1,12 +1,13 @@
 import asyncio
 import logging
 import os
+import tempfile
 import yt_dlp
 from typing import Optional
 
 logger = logging.getLogger(__name__)
 
-AUDIO_OUTPUT_FOLDER = "/tmp/audio_downloads"
+AUDIO_OUTPUT_FOLDER = os.path.join(tempfile.gettempdir(), "video_sent_audio_downloads")
 AUDIO_FORMAT = "mp3"
 
 
@@ -31,7 +32,7 @@ def _pobierz_audio_sync(url: str) -> Optional[str]:
 
     try:
         with yt_dlp.YoutubeDL(opcje) as ydl:
-            logger.info(f"Początek pobierania audio dla URL: {url}")
+            logger.info(f"Starting audio download for URL: {url}")
 
             info = ydl.extract_info(url, download=True)
 
@@ -42,18 +43,18 @@ def _pobierz_audio_sync(url: str) -> Optional[str]:
             platform = info.get('extractor', 'Unknown Platform')
 
             if os.path.exists(final_path):
-                logger.info(f"Pomyślnie pobrano audio do: {final_path}")
+                logger.info(f"Successfully downloaded audio to: {final_path}")
                 return {
                     "path": final_path,
                     "title": title,
                     "platform": platform
                 }
             else:
-                logger.error(f"Plik nie został znaleziony po pobraniu: {final_path}")
+                logger.error(f"File not found after download: {final_path}")
                 return None
 
     except Exception as e:
-        logger.error(f"Błąd pobierania audio dla {url}: {e}")
+        logger.error(f"Error downloading audio for {url}: {e}")
         return None
 
 

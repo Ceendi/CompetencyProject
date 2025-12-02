@@ -20,10 +20,15 @@ async def initiate_analysis_endpoint(
         request: film_schema.FilmCreate,
         db: Session = Depends(get_db)
 ):
+    active_job = crud_job.get_active_job_by_url(db, url=str(request.url))
+    if active_job:
+        return active_job
+
     existing_film = crud_film.get_film_by_url(db, url=str(request.url))
     if existing_film:
         new_job = crud_job.create_job(db, url=str(request.url))
         crud_job.set_job_complete(db, job_id=new_job.id, film_id=existing_film.id)
+        db.refresh(new_job)
         return new_job
 
     new_job = crud_job.create_job(db, url=str(request.url))
