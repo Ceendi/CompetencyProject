@@ -21,7 +21,8 @@ const generateGradientChartData = () => {
   return { dataArray, colorsArray };
 };
 
-const { dataArray: gradientData, colorsArray: gradientColors } = generateGradientChartData();
+const { dataArray: gradientData, colorsArray: gradientColors } =
+  generateGradientChartData();
 
 const needlePlugin = {
   id: "needlePlugin",
@@ -32,7 +33,7 @@ const needlePlugin = {
 
     const meta = chart.getDatasetMeta(0).data[0];
     const needleLength = 0.65 * meta.outerRadius - 5;
-    const angle = Math.PI + (Math.PI * normalizedValue);
+    const angle = Math.PI + Math.PI * normalizedValue;
 
     ctx.save();
     ctx.translate(meta.x, meta.y);
@@ -60,12 +61,14 @@ const needlePlugin = {
 
 const SentimentGauge = ({ label, value, isLarge = false }) => {
   const data = {
-    datasets: [{
-      data: gradientData,
-      backgroundColor: gradientColors,
-      borderWidth: 0,
-      cutout: "60%",
-    }],
+    datasets: [
+      {
+        data: gradientData,
+        backgroundColor: gradientColors,
+        borderWidth: 0,
+        cutout: "60%",
+      },
+    ],
   };
 
   const options = {
@@ -73,7 +76,7 @@ const SentimentGauge = ({ label, value, isLarge = false }) => {
     maintainAspectRatio: true,
     rotation: -90,
     circumference: 180,
-    events: [], 
+    events: [],
     layout: { padding: 0 },
     plugins: {
       legend: { display: false },
@@ -118,20 +121,23 @@ export function ReviewDetailPage() {
     );
   }
 
-  const analysisEntries = video.analysis ? Object.entries(video.analysis).slice(0, 10) : [];
-  
+  const analysisEntries = video.analysis
+    ? Object.entries(video.analysis).slice(0, 10)
+    : [];
+
   const validScores = analysisEntries
     .map(([, val]) => val)
-    .filter(val => typeof val === "number");
+    .filter((val) => typeof val === "number");
 
-  const overallScore = validScores.length > 0 
-    ? validScores.reduce((acc, curr) => acc + curr, 0) / validScores.length 
-    : null;
+  const overallScore =
+    validScores.length > 0
+      ? validScores.reduce((acc, curr) => acc + curr, 0) / validScores.length
+      : null;
 
   return (
     <div className="review-detail-container">
-      <h1 className="review-detail-title">{video.videoTitle}</h1>
-      
+      <h1 className="review-detail-title">{video.title}</h1>
+
       <div className="review-detail-meta">
         <div className="review-detail-meta-item">
           <span className="review-detail-meta-label">Platform:</span>
@@ -144,7 +150,6 @@ export function ReviewDetailPage() {
       </div>
 
       <div className="review-detail-summary">
-        
         {overallScore !== null && (
           <div className="review-hero-section">
             <h2 className="section-title center-text">Overall Score</h2>
@@ -162,11 +167,13 @@ export function ReviewDetailPage() {
         <h2 className="section-title">Detailed Analysis</h2>
         {analysisEntries.length > 0 ? (
           <div className="review-gauges-grid">
-            {analysisEntries.map(([key, value]) => (
-               typeof value === 'number' 
-                 ? <SentimentGauge key={key} label={key} value={value} />
-                 : <NoDataGauge key={key} label={key} />
-            ))}
+            {analysisEntries.map(([key, value]) =>
+              typeof value === "number" ? (
+                <SentimentGauge key={key} label={key} value={value} />
+              ) : (
+                <NoDataGauge key={key} label={key} />
+              )
+            )}
           </div>
         ) : (
           <p>Brak analizy do wyświetlenia.</p>
@@ -175,10 +182,10 @@ export function ReviewDetailPage() {
         <div className="review-transcription-section">
           <h2 className="section-title">Video Transcription</h2>
           <div className="transcription-box">
-            {video.transcribed_text || "No transcription available for this video."}
+            {video.transcribed_text ||
+              "No transcription available for this video."}
           </div>
         </div>
-
       </div>
     </div>
   );

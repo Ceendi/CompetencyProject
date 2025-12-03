@@ -15,7 +15,7 @@ export default function TableRow({ video, handleViewSummary }) {
       transition={{ duration: 0.4 }}
       style={{ position: isPresent ? "relative" : "absolute" }}
     >
-      <td className="dashboard-td dashboard-td-video">{video.videoTitle}</td>
+      <td className="dashboard-td dashboard-td-video">{video.title}</td>
       <td className="dashboard-td dashboard-td-platform">{video.platform}</td>
       <td className="dashboard-td dashboard-td-date">{video.date}</td>
       <td
